@@ -7,11 +7,7 @@ import { List, Caption, Button } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Slider from "@react-native-community/slider";
-import {
-  SliderHuePicker,
-  SliderSaturationPicker,
-  SliderValuePicker,
-} from "react-native-slider-color-picker";
+import { SliderHuePicker } from "react-native-slider-color-picker";
 import Colors from "../styles/colors";
 
 export default class HomeScreen extends Component {
@@ -26,16 +22,31 @@ export default class HomeScreen extends Component {
   };
   BrightnessChanged = (value) => {
     this.setState({ brightness: value });
-    console.log(value);
-    fetch(`http://192.168.0.183/params?brightness=${value}`);
+    fetch(`http://192.168.0.183/params?brightness=${value}`)
+      // .then((response) => {
+      //   console.log(response.toString());
+      //   return response.json();
+      // })
+      // .then((data) => {
+      //   this.setValues(data);
+      //   console.log(data);
+      // })
+      .catch((err) => {
+        console.log(err);
+      });
   };
   HueColorChanged = (value) => {
+    console.log(value.h);
     this.setState({ hueColor: value });
-    console.log(value);
+    fetch(`http://192.168.0.183/params?hue_ang=${value.h}`).catch((err) => {
+      console.log(err);
+    });
   };
   SpeedChanged = (value) => {
     this.setState({ speed: value });
-    console.log(value);
+    fetch(`http://192.168.0.183/params?hue_speed=${value}`).catch((err) => {
+      console.log(err);
+    });
   };
 
   render() {

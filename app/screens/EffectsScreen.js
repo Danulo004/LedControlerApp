@@ -10,10 +10,23 @@ import Colors from "../styles/colors";
 export default class EffectsScreen extends Component {
   state = {
     effectValue: null,
+    speedValue: 5,
+    scaleValue: 10,
   };
   EffectChanged = (value) => {
+    console.log(value);
     this.setState({ effectValue: value });
-    console.log(this.state.effectValue);
+    fetch(`http://192.168.0.183/params?effect=${value}`).catch((err) => {
+      console.log(err);
+    });
+  };
+  SpeedChanged = (value) => {
+    this.setState({ speedValue: value });
+    Controller.setSpeed(value);
+  };
+  ScaleChanged = (value) => {
+    this.setState({ scaleValue: value });
+    Controller.setScale(value);
   };
 
   render() {
@@ -26,35 +39,47 @@ export default class EffectsScreen extends Component {
           <RNPickerSelect
             onValueChange={(value) => this.EffectChanged(value)}
             items={[
-              { label: "Lighter", value: "Lighter" },
-              { label: "all_hue", value: "all_hue" },
-              { label: "randomColors", value: "randomColors" },
-              { label: "Raonbow", value: "Raonbow" },
-              { label: "sparkles", value: "sparkles" },
-              { label: "Fire", value: "Fire" },
-              { label: "twinkle", value: "twinkle" },
-              { label: "theaterChase", value: "theaterChase" },
-              { label: "theaterChaseRainbow", value: "theaterChaseRainbow" },
-              { label: "SnowSparkle", value: "SnowSparkle" },
-              { label: "twinkleRandom", value: "twinkleRandom" },
-              { label: "rainbow_butterfly", value: "rainbow_butterfly" },
+              { label: "Lighter", value: 0 },
+              { label: "randomColors", value: 1 },
+              { label: "Raonbow", value: 2 },
+              { label: "sparkles", value: 3 },
+              { label: "Fire", value: 4 },
+              { label: "random_lights", value: 5 },
+              { label: "twinkle", value: 6 },
+              { label: "theaterChase", value: 7 },
+              { label: "theaterChaseRainbow", value: 8 },
+              // { label: "SnowSparkle", value: "SnowSparkle" },
+              { label: "twinkleRandom", value: 9 },
+              { label: "rainbow_butterfly", value: 10 },
             ]}
           />
         </View>
 
         <View style={styles.slidersContainer}>
-          <View>
-            <Text>Speed</Text>
-            <Slider
-              style={{ width: 200, height: 40 }}
-              // disabled={!this.state.isStripOn}
-              minimumValue={0}
-              maximumValue={255}
-              step={1}
-              value={this.state.speedValue}
-              // onValueChange={(value) => this.BrightnessChanged(value)}
-            />
-          </View>
+          <Text>Speed</Text>
+          <Slider
+            style={{ width: 200, height: 40 }}
+            disabled={this.state.effectValue == null}
+            minimumValue={0}
+            maximumValue={300}
+            step={1}
+            value={this.state.speedValue}
+            onValueChange={(value) => this.SpeedChanged(value)}
+          />
+          <Text>{this.state.speedValue}</Text>
+        </View>
+        <View style={styles.slidersContainer}>
+          <Text>Scale</Text>
+          <Slider
+            style={{ width: 200, height: 40 }}
+            disabled={this.state.effectValue == null}
+            minimumValue={0}
+            maximumValue={300}
+            step={1}
+            value={this.state.scaleValue}
+            onValueChange={(value) => this.ScaleChanged(value)}
+          />
+          <Text>{this.state.scaleValue}</Text>
         </View>
       </Container>
     );
@@ -69,5 +94,10 @@ const styles = StyleSheet.create({
   slidersContainer: {
     borderBottomColor: Colors.border,
     borderBottomWidth: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 20,
+    paddingVertical: 5,
+    justifyContent: "space-around",
   },
 });
